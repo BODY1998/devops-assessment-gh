@@ -70,12 +70,19 @@ jobs:
           echo "Pushing image tags"
           docker push "$IMAGE:${{ github.sha }}"
           docker push "$IMAGE:latest"
-  helm-deploy:
+  77
+  :
     name: Get GKE credentials & Helm deploy (upgrade --install)
     runs-on: ubuntu-latest
     needs: build-test-lint-docker
     environment: production
-    steps:
+      env:
+          K8S_NAMESPACE: default
+              HELM_RELEASE_NAME: devops-sample-app
+                  HELM_CHART_PATH: ./helm/webapp
+                      IMAGE_REPO: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/app-artifact-repo
+                          IMAGE_NAME: devops-sample-app
+    steps:steps:
     - name: Checkout
       uses: actions/checkout@v4
 
