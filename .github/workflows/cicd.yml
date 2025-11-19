@@ -54,6 +54,7 @@ jobs:
         env:
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
         run: |
+          set -euo pipefail
           REPO="us-central1-docker.pkg.dev/${PROJECT_ID}/app-artifact-repo"
           IMAGE="${REPO}/devops-sample-app"
 
@@ -97,24 +98,25 @@ jobs:
 
     - name: Verify kubectl connectivity
       run: |
+        set -euo pipefail
         kubectl version --client
         kubectl get nodes --no-headers -o wide
 
-        - name: Install jq (for parsing helm history)
-        run: sudo apt-get update && sudo apt-get install -y jq
+    - name: Install jq (for parsing helm history)
+      run: sudo apt-get update && sudo apt-get install -y jq
 
-        - name: Setup Helm
-        uses: azure/setup-helm@v3
-        with:
+    - name: Setup Helm
+      uses: azure/setup-helm@v3
+      with:
         version: v3.12.0
 
-        - name: Ensure namespace exists
-        run: |
+    - name: Ensure namespace exists
+      run: |
         kubectl get namespace "${K8S_NAMESPACE}" || kubectl create namespace "${K8S_NAMESPACE}"
 
-        - name: Capture previous Helm revision (if any)
-        id: prev
-        run: |
+    - name: Capture previous Helm revision (if any)
+      id: prev
+      run: |
         RELEASE="${HELM_RELEASE_NAME}"
         NAMESPACE="${K8S_NAMESPACE}"
         if helm status "$RELEASE" -n "$NAMESPACE" > /dev/null 2>&1; then
