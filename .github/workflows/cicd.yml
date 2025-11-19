@@ -127,6 +127,13 @@ jobs:
         fi
 
     - name: Helm upgrade --install (wait)
+      env:
+        RELEASE: ${{ env.HELM_RELEASE_NAME }}
+        NAMESPACE: ${{ env.K8S_NAMESPACE }}
+        CHART: ${{ env.HELM_CHART_PATH }}
+        IMAGE_REPO: ${{ env.IMAGE_REPO }}
+        IMAGE: ${{ env.IMAGE_NAME }}
+        IMAGE_TAG: ${{ github.sha }}
       run: |
         set -e
         helm upgrade --install "$RELEASE" "$CHART" \
