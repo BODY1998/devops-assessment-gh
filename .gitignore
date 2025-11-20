@@ -23,5 +23,3 @@ override.tf.json
 
 # Local environment files
 .terraform.tfstate.lock.info
-
-/infra
